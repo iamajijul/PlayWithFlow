@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class MainActivityViewModel : ViewModel() {
 
     init {
-        tryFlatMapConcat1()
+        tryFlatMapLatest()
     }
 
     private fun tryFlatMapConcat() {
@@ -23,7 +23,7 @@ class MainActivityViewModel : ViewModel() {
             flow1.flatMapConcat {
                 flow { emit(it + 1) }
             }.collect {
-                println("Emitted Value - $it")
+                println("Emitted Value on flatMapConcat- $it")
             }
         }
     }
@@ -33,7 +33,29 @@ class MainActivityViewModel : ViewModel() {
             flow1.flatMapConcat {
                 flow { emit(it + 1) }
             }.collect {
-                println("Emitted Value - $it")
+                println("Emitted Value on tryFlatMapConcat1 - $it")
+            }
+        }
+    }
+    private fun tryFlatMapMerge() {
+        val flow1 = (1..5).asFlow()
+        viewModelScope.launch {
+            flow1.flatMapMerge {
+                flow { emit(it + 1) }
+            }.collect {
+                println("Emitted Value on tryFlatMapMerge - $it")
+            }
+        }
+    }
+    private fun tryFlatMapLatest() {
+        val flow1 = (1..5).asFlow()
+        viewModelScope.launch {
+            flow1.flatMapLatest {
+                flow {
+                    delay(1000)
+                    emit(it + 1) }
+            }.collect {
+                println("Emitted Value on flatMapLatest - $it")
             }
         }
     }
