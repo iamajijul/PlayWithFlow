@@ -2,39 +2,38 @@ package com.ajijul.playwithflow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-
+@FlowPreview
 class MainActivityViewModel : ViewModel() {
-    val countDownFlow = flow {
-        var startingValue = 10
-        while (startingValue > 0) {
-            delay(1000)
-            emit(startingValue)
-            startingValue--
-        }
-    }
 
     init {
-        //collectTimeInternally()
-        collectLatestTimeInternally()
+        tryFlatMapConcat1()
     }
 
-    private fun collectTimeInternally() {
+    private fun tryFlatMapConcat() {
+        val flow1 = flow<Int> {
+            emit(1)
+            delay(1000)
+            emit(2)
+        }
         viewModelScope.launch {
-            countDownFlow.collect {
-                println("Collect value $it")
+            flow1.flatMapConcat {
+                flow { emit(it + 1) }
+            }.collect {
+                println("Emitted Value - $it")
             }
         }
     }
-    private fun collectLatestTimeInternally() {
+    private fun tryFlatMapConcat1() {
+        val flow1 = (1..5).asFlow()
         viewModelScope.launch {
-            countDownFlow.collectLatest {
-                delay(1500)
-                println("Collect Latest Value $it")
+            flow1.flatMapConcat {
+                flow { emit(it + 1) }
+            }.collect {
+                println("Emitted Value - $it")
             }
         }
     }

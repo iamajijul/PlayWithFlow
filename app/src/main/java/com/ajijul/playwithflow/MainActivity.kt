@@ -23,10 +23,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             PlayWithFlowTheme {
                 val viewModel : MainActivityViewModel = viewModel()
-                val timeState = viewModel.countDownFlow.collectAsState(initial = 10)
-                Box(modifier = Modifier.fillMaxSize() , contentAlignment = Alignment.Center){
-                    Text(text = timeState.value.toString(), fontSize = 20.sp)
-                }
+               // val timeState = viewModel.countDownFlow.collectAsState(initial = 10)
+//                Box(modifier = Modifier.fillMaxSize() , contentAlignment = Alignment.Center){
+//                    Text(text = timeState.value.toString(), fontSize = 20.sp)
+//                }
             }
         }
     }
